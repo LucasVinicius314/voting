@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting/screens/home_screen.dart';
 import 'package:voting/utils/constants.dart';
 
 class App extends StatelessWidget {
@@ -6,10 +7,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: Constants.appTitle,
       routes: {
-        'a':(context) => 
+        HomeScreen.route: (context) => const HomeScreen(),
       },
     );
   }
