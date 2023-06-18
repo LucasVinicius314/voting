@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voting/blocs/role/role_bloc.dart';
 import 'package:voting/blocs/vote/vote_bloc.dart';
+import 'package:voting/repositories/role_repository.dart';
 
 class BlocProviders extends StatelessWidget {
   const BlocProviders({
@@ -15,8 +16,14 @@ class BlocProviders extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => RoleBloc()),
-        BlocProvider(create: (context) => VoteBloc()),
+        BlocProvider<RoleBloc>(
+          create: (context) => RoleBloc(
+            roleRepository: RepositoryProvider.of<RoleRepository>(context),
+          ),
+        ),
+        BlocProvider<VoteBloc>(
+          create: (context) => VoteBloc(),
+        ),
       ],
       child: child,
     );

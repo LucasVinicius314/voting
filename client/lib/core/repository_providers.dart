@@ -17,7 +17,9 @@ class RepositoryProviders extends StatelessWidget {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider(create: (context) => MockRoleRepository()),
+        RepositoryProvider<RoleRepository>(
+          create: (context) => MockRoleRepository(),
+        ),
       ],
       child: child,
     );

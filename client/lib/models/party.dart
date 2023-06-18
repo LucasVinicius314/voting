@@ -6,11 +6,12 @@ part 'party.g.dart';
 @JsonSerializable(fieldRename: FieldRename.none, explicitToJson: true)
 class Party {
   Party({
+    required this.acronym,
     required this.name,
     required this.candidates,
   });
 
-  int? code;
+  String? acronym;
   String? name;
   List<Candidate>? candidates;
 

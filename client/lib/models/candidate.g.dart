@@ -7,8 +7,9 @@ part of 'candidate.dart';
 // **************************************************************************
 
 Candidate _$CandidateFromJson(Map<String, dynamic> json) => Candidate(
+      code: json['code'] as int?,
       name: json['name'] as String?,
-    )..code = json['code'] as int?;
+    );
 
 Map<String, dynamic> _$CandidateToJson(Candidate instance) => <String, dynamic>{
       'code': instance.code,
