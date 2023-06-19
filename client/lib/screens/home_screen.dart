@@ -48,13 +48,14 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                  onPressed: () async {
-                    // TODO: fix, results
-                    await Navigator.of(context).pushNamed(PostVoteScreen.route);
-                  },
-                  child: const Text('CONFERIR RESULTADOS'),
+                child: Tooltip(
+                  message: 'Em breve',
+                  child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    onPressed: null,
+                    child: const Text('CONFERIR RESULTADOS'),
+                  ),
                 ),
               ),
               const SizedBox(width: 16),
