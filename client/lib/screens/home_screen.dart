@@ -5,9 +5,13 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:voting/blocs/role/role_bloc.dart';
 import 'package:voting/blocs/role/role_event.dart';
 import 'package:voting/blocs/role/role_state.dart';
+import 'package:voting/blocs/vote/vote_bloc.dart';
+import 'package:voting/blocs/vote/vote_event.dart';
+import 'package:voting/blocs/vote/vote_state.dart';
 import 'package:voting/models/candidate.dart';
 import 'package:voting/models/party.dart';
 import 'package:voting/utils/constants.dart';
+import 'package:voting/utils/enums.dart';
 import 'package:voting/utils/validation.dart';
 import 'package:voting/widgets/loading_indicator.dart';
 
@@ -26,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Party? _presidentParty;
   Party? _mayorParty;
+
+  Gender? _gender;
 
   DateTime? _birthDate;
 
@@ -46,8 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!serviceEnabled) {
       return null;
     }
-
-    // TODO: fix
 
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -165,18 +169,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: DropdownButtonFormField<String>(
+                            child: DropdownButtonFormField<Gender?>(
+                              value: _gender,
                               items: const [
                                 DropdownMenuItem(
-                                  value: 'F',
+                                  value: Gender.female,
                                   child: Text('Feminino'),
                                 ),
                                 DropdownMenuItem(
-                                  value: 'M',
+                                  value: Gender.male,
                                   child: Text('Masculino'),
                                 ),
                                 DropdownMenuItem(
-                                  value: 'O',
+                                  value: Gender.other,
                                   child: Text('Outro'),
                                 ),
                               ],
@@ -191,7 +196,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
                                 return null;
                               },
-                              onChanged: (value) {},
+                              onChanged: (value) {
+                                setState(() {
+                                  _gender = value;
+                                });
+                              },
                             ),
                           ),
                           const SizedBox(width: 32),
@@ -234,9 +243,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(child: Container()),
                     const SizedBox(width: 16),
                     Expanded(
-                      child: ElevatedButton(
-                        onPressed: _submit,
-                        child: const Text('CONCLUIR'),
+                      child: BlocBuilder<VoteBloc, VoteState>(
+                        builder: (context, state) {
+                          return ElevatedButton(
+                            onPressed: state is SubmitVoteLoadingState
+                                ? null
+                                : _submit,
+                            child: const Text('CONCLUIR'),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -366,6 +381,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _submit() async {
+    final voteBloc = BlocProvider.of<VoteBloc>(context);
+
     if (_formKey.currentState?.validate() != true) {
       return;
     }
@@ -393,13 +410,25 @@ class _HomeScreenState extends State<HomeScreen> {
     if (position == null) {
       await _showDialog(
         content:
-            'Habilite o serviço de localização do dispositivo ou permita o acesso do app ao serviço de localização e tente novamente.',
+            'Habilite ou permita o acesso do app ao serviço de localização do dispositivo e tente novamente.',
       );
 
       return;
     }
 
-    // TODO: fix, submit
+    voteBloc.add(
+      SubmitVoteEvent(
+        president: _president!,
+        presidentParty: _presidentParty!,
+        mayor: _mayor!,
+        mayorParty: _mayorParty!,
+        cpf: _controller.text.replaceAll(RegExp(r'[\-\.]'), ''),
+        gender: _gender!,
+        birthDate: _birthDate!,
+        latitude: position.latitude,
+        longitude: position.longitude,
+      ),
+    );
   }
 
   @override
@@ -436,9 +465,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 if (state is ListRolesDoneState) {
-                  return Form(
-                    key: _formKey,
-                    child: _getContent(state: state),
+                  return BlocListener<VoteBloc, VoteState>(
+                    listener: (context, state) async {
+                      if (state is SubmitVoteErrorState) {
+                        await _showDialog(content: state.message);
+                      } else if (state is SubmitVoteDoneState) {
+                        await _showDialog(content: 'sucesso');
+                      }
+                    },
+                    child: Form(
+                      key: _formKey,
+                      child: _getContent(state: state),
+                    ),
                   );
                 }
 

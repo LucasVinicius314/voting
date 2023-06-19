@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voting/repositories/role_repository.dart';
+import 'package:voting/repositories/vote_repository.dart';
 
 class RepositoryProviders extends StatelessWidget {
   const RepositoryProviders({
@@ -12,13 +13,13 @@ class RepositoryProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: fix
-    // final api = Api(authority: '');
-
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<RoleRepository>(
           create: (context) => MockRoleRepository(),
+        ),
+        RepositoryProvider<VoteRepository>(
+          create: (context) => MockVoteRepository(),
         ),
       ],
       child: child,

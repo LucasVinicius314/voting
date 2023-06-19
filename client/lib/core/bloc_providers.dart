@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:voting/blocs/role/role_bloc.dart';
 import 'package:voting/blocs/vote/vote_bloc.dart';
 import 'package:voting/repositories/role_repository.dart';
+import 'package:voting/repositories/vote_repository.dart';
 
 class BlocProviders extends StatelessWidget {
   const BlocProviders({
@@ -22,7 +23,9 @@ class BlocProviders extends StatelessWidget {
           ),
         ),
         BlocProvider<VoteBloc>(
-          create: (context) => VoteBloc(),
+          create: (context) => VoteBloc(
+            voteRepository: RepositoryProvider.of<VoteRepository>(context),
+          ),
         ),
       ],
       child: child,
