@@ -20,27 +20,26 @@ class Utils {
     await Navigator.of(context).maybePop();
   }
 
-  static Future<void> pushNavigation(
-    BuildContext context,
-    String route, {
-    Object? arguments,
+  static Future<void> showDefaultDialog({
+    required BuildContext context,
+    required String content,
   }) async {
-    if (kDebugMode) {
-      print('navigating to $route');
-    }
-
-    await Navigator.of(context).pushNamed(route, arguments: arguments);
-  }
-
-  static Future<void> replaceNavigation(
-    BuildContext context,
-    String route,
-  ) async {
-    if (kDebugMode) {
-      print('navigating to $route');
-    }
-
-    await Navigator.of(context)
-        .pushNamedAndRemoveUntil(route, (route) => false);
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Atenção'),
+          content: Text(content),
+          actions: [
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () async {
+                await Navigator.of(context).maybePop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
