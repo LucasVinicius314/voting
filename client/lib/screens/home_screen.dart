@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voting/screens/post_vote_screen.dart';
 import 'package:voting/screens/vote_screen.dart';
 import 'package:voting/utils/constants.dart';
 
