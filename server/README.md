@@ -1,1 +1,1 @@
-# voting/server
+voting/server
