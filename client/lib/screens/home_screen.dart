@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voting/screens/results_screen.dart';
 import 'package:voting/screens/vote_screen.dart';
 import 'package:voting/utils/constants.dart';
 
@@ -47,14 +48,14 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Tooltip(
-                  message: 'Em breve',
-                  child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                    onPressed: null,
-                    child: const Text('CONFERIR RESULTADOS'),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
                   ),
+                  onPressed: () async {
+                    await Navigator.of(context).pushNamed(ResultsScreen.route);
+                  },
+                  child: const Text('CONFERIR RESULTADOS'),
                 ),
               ),
               const SizedBox(width: 16),

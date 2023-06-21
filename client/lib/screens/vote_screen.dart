@@ -326,13 +326,13 @@ class _VoteScreenState extends State<VoteScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '${candidate.getCode} - ${candidate.name ?? ''} (${party.acronym ?? ''})',
+                        '${candidate.getCode} - ${candidate.name} (${party.acronym})',
                         style: Theme.of(context)
                             .textTheme
                             .bodyLarge
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      Text(party.name ?? ''),
+                      Text(party.name),
                     ],
                   ),
                 ),
@@ -343,13 +343,13 @@ class _VoteScreenState extends State<VoteScreen> {
         ...parties.map((e) {
           return ExpansionTile(
             expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-            title: Text(e.name ?? ''),
-            subtitle: Text(e.acronym ?? ''),
+            title: Text(e.name),
+            subtitle: Text(e.acronym),
             children: (e.candidates ?? []).map((e2) {
               return RadioListTile<Candidate>(
                 value: e2,
                 groupValue: candidate,
-                title: Text(e2.name ?? ''),
+                title: Text(e2.name),
                 subtitle: Text(e2.getCode),
                 onChanged: (value) {
                   onChanged(e2, e);

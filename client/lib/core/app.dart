@@ -4,6 +4,7 @@ import 'package:voting/core/bloc_providers.dart';
 import 'package:voting/core/repository_providers.dart';
 import 'package:voting/screens/home_screen.dart';
 import 'package:voting/screens/post_vote_screen.dart';
+import 'package:voting/screens/results_screen.dart';
 import 'package:voting/screens/vote_screen.dart';
 import 'package:voting/utils/constants.dart';
 
@@ -41,6 +42,7 @@ class App extends StatelessWidget {
           routes: {
             HomeScreen.route: (context) => const HomeScreen(),
             PostVoteScreen.route: (context) => const PostVoteScreen(),
+            ResultsScreen.route: (context) => const ResultsScreen(),
             VoteScreen.route: (context) => const VoteScreen(),
           },
         ),

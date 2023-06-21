@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:voting/utils/parsing.dart';
 
 part 'candidate.g.dart';
 
@@ -9,10 +10,12 @@ class Candidate {
     required this.name,
   });
 
-  int? code;
-  String? name;
+  @JsonKey(fromJson: Parsing.parseInt)
+  int code;
+  @JsonKey(fromJson: Parsing.parseString)
+  String name;
 
-  String get getCode => (code ?? 0).toStringAsFixed(0).padLeft(3, '0');
+  String get getCode => code.toStringAsFixed(0).padLeft(3, '0');
 
   factory Candidate.fromJson(Map<String, dynamic> json) =>
       _$CandidateFromJson(json);
