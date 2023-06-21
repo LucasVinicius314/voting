@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export type Party = {
-  partyName: string,
-  partyId?: ObjectId,
+  _id: ObjectId,
+  name: string,
+  acronym: string,
 }

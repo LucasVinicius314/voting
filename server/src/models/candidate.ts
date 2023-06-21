@@ -1,7 +1,8 @@
-import { ObjectId } from "mongodb";
+import { IntegerType, ObjectId } from "mongodb";
 
 export type Candidate = {
-  candidateName: string,
-  partyId?: ObjectId,
-  candidateId?: ObjectId
+  _id: ObjectId,
+  partyId: ObjectId,
+  name: string,
+  code: IntegerType,
 }
