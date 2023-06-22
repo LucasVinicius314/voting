@@ -27,7 +27,7 @@ export async function connectToDatabase() {
     console.log('.env file does not exist. Error to connect to database')
     return null
   }
-  
+
   const client: mongoDB.MongoClient = new mongoDB.MongoClient(
     process.env.MONGO_URI
   )
@@ -36,20 +36,21 @@ export async function connectToDatabase() {
     await client.connect()
 
     const db: mongoDB.Db = client.db(process.env.DB_NAME)
+    
     const voteCollection: mongoDB.Collection = db.collection(
       process.env.COLLECTION_NAME_VOTE
     )
     collections.vote = voteCollection
-
+   
     const candidateCollection: mongoDB.Collection = db.collection(
       process.env.COLLECTION_NAME_CANDIDATE
     )
     collections.candidate = candidateCollection
 
     const partyCollection: mongoDB.Collection = db.collection(
-        process.env.COLLECTION_NAME_PARTY
-      )
-      collections.party = partyCollection
+      process.env.COLLECTION_NAME_PARTY
+    )
+    collections.party = partyCollection
 
     console.log(
       `Successfully connected to database: ${db.databaseName} and collections: ${voteCollection.collectionName} - ${candidateCollection.collectionName} - ${partyCollection.collectionName}`
