@@ -5,4 +5,5 @@ export type Candidate = {
   partyId: ObjectId,
   name: string,
   code: IntegerType,
+  role: string,
 }
