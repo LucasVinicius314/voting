@@ -1,12 +1,14 @@
 import 'package:voting/blocs/vote/vote_event.dart';
 import 'package:voting/utils/api.dart';
 
+/// Stategy: [VoteRepository], [ApiVoteRepository], [MockVoteRepository], [RepositoryProviders],
 abstract class VoteRepository {
   Future<void> sumbitVote({
     required SubmitVoteEvent event,
   });
 }
 
+/// Stategy: [VoteRepository], [ApiVoteRepository], [MockVoteRepository], [RepositoryProviders],
 class ApiVoteRepository extends VoteRepository {
   ApiVoteRepository({required this.api});
 
@@ -29,6 +31,7 @@ class ApiVoteRepository extends VoteRepository {
   }
 }
 
+/// Stategy: [VoteRepository], [ApiVoteRepository], [MockVoteRepository], [RepositoryProviders],
 class MockVoteRepository extends VoteRepository {
   @override
   Future<void> sumbitVote({required SubmitVoteEvent event}) async {

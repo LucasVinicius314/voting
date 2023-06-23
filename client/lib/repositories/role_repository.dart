@@ -3,10 +3,12 @@ import 'package:voting/models/party.dart';
 import 'package:voting/models/responses/list_roles_response.dart';
 import 'package:voting/utils/api.dart';
 
+/// Stategy: [RoleRepository], [ApiRoleRepository], [MockRoleRepository], [RepositoryProviders],
 abstract class RoleRepository {
   Future<ListRolesResponse> listRoles();
 }
 
+/// Stategy: [RoleRepository], [ApiRoleRepository], [MockRoleRepository], [RepositoryProviders],
 class ApiRoleRepository extends RoleRepository {
   ApiRoleRepository({required this.api});
 
@@ -22,6 +24,7 @@ class ApiRoleRepository extends RoleRepository {
   }
 }
 
+/// Stategy: [RoleRepository], [ApiRoleRepository], [MockRoleRepository], [RepositoryProviders],
 class MockRoleRepository extends RoleRepository {
   @override
   Future<ListRolesResponse> listRoles() async {

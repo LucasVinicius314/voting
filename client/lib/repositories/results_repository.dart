@@ -3,10 +3,12 @@ import 'package:voting/models/result.dart';
 import 'package:voting/models/vote_results.dart';
 import 'package:voting/utils/api.dart';
 
+/// Stategy: [ResultsRepository], [ApiResultsRepository], [MockResultsRepository], [RepositoryProviders],
 abstract class ResultsRepository {
   Future<GetResultsResponse> getResults();
 }
 
+/// Stategy: [ResultsRepository], [ApiResultsRepository], [MockResultsRepository], [RepositoryProviders],
 class ApiResultsRepository extends ResultsRepository {
   ApiResultsRepository({required this.api});
 
@@ -22,6 +24,7 @@ class ApiResultsRepository extends ResultsRepository {
   }
 }
 
+/// Stategy: [ResultsRepository], [ApiResultsRepository], [MockResultsRepository], [RepositoryProviders],
 class MockResultsRepository extends ResultsRepository {
   @override
   Future<GetResultsResponse> getResults() async {
