@@ -6,14 +6,23 @@ part 'candidate.g.dart';
 @JsonSerializable(fieldRename: FieldRename.none, explicitToJson: true)
 class Candidate {
   Candidate({
-    required this.code,
+    required this.id,
+    required this.partyId,
     required this.name,
+    required this.code,
+    required this.role,
   });
 
+  @JsonKey(fromJson: Parsing.parseString, name: '_id')
+  String id;
+  @JsonKey(fromJson: Parsing.parseString)
+  String partyId;
+  @JsonKey(fromJson: Parsing.parseString)
+  String name;
   @JsonKey(fromJson: Parsing.parseInt)
   int code;
   @JsonKey(fromJson: Parsing.parseString)
-  String name;
+  String role;
 
   String get getCode => code.toStringAsFixed(0).padLeft(3, '0');
 

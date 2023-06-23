@@ -1,24 +1,43 @@
-import * as express from 'express'
 import * as cors from 'cors'
+import * as express from 'express'
+
+import { createParty, getCandidatesWithParty } from './services/party'
+import { createVote, getVotes } from './services/vote'
 
 import { Request } from 'express'
-
-import { createVote, getVotes } from './services/vote'
-import { createParty, getCandidatesWithParty } from './services/party'
 import { createCandidate } from './services/candidate'
+import { json } from 'body-parser'
+import { mongoSetup } from './services/server'
 
-const app = express()
-const port = 8000
+const setup = async () => {
+  await mongoSetup()
 
-app.use(express.json()) 
-app.use(cors<Request>())
+  const app = express()
+  const port = 8000
 
-app.post('/api/voting', createVote)
-app.get('/api/results', getVotes)
-app.post('/api/party', createParty)
-app.get('/api/candidates', getCandidatesWithParty)
-app.post('/api/candidate', createCandidate)
+  app.use(json())
+  app.use(cors<Request>())
 
-app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`)
-})
+  app.use((req, res, next) => {
+    console.info(`${req.method} ${req.path}`)
+
+    next()
+  })
+
+  const apiRouter = express.Router()
+
+  apiRouter.post('/vote', createVote)
+  apiRouter.get('/results', getVotes)
+  apiRouter.get('/candidates', getCandidatesWithParty)
+
+  apiRouter.post('/party', createParty)
+  apiRouter.post('/candidate', createCandidate)
+
+  app.use('/api', apiRouter)
+
+  app.listen(port, () => {
+    console.log(`App listening at http://localhost:${port}`)
+  })
+}
+
+setup()

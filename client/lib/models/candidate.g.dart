@@ -7,11 +7,17 @@ part of 'candidate.dart';
 // **************************************************************************
 
 Candidate _$CandidateFromJson(Map<String, dynamic> json) => Candidate(
-      code: Parsing.parseInt(json['code']),
+      id: Parsing.parseString(json['_id']),
+      partyId: Parsing.parseString(json['partyId']),
       name: Parsing.parseString(json['name']),
+      code: Parsing.parseInt(json['code']),
+      role: Parsing.parseString(json['role']),
     );
 
 Map<String, dynamic> _$CandidateToJson(Candidate instance) => <String, dynamic>{
-      'code': instance.code,
+      '_id': instance.id,
+      'partyId': instance.partyId,
       'name': instance.name,
+      'code': instance.code,
+      'role': instance.role,
     };

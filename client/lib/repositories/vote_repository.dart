@@ -14,10 +14,17 @@ class ApiVoteRepository extends VoteRepository {
 
   @override
   Future<void> sumbitVote({required SubmitVoteEvent event}) async {
-    // TODO: implement
-
-    await api.get(
-      path: '/...',
+    await api.post(
+      path: '/api/vote',
+      body: {
+        'presidentId': event.president.id,
+        'mayorId': event.mayor.id,
+        'cpf': event.cpf,
+        'gender': event.gender.toString(),
+        'latitude': event.latitude,
+        'longitude': event.longitude,
+        'birthDate': event.birthDate.toUtc().toIso8601String(),
+      },
     );
   }
 }

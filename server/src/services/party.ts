@@ -1,11 +1,8 @@
 import { Request, Response } from 'express'
+import { collections, connectToDatabase } from './server'
 
-import {
-  connectToDatabase,
-  collections,
-  closeDatabaseConnection,
-} from './server'
-
+import { ObjectId } from 'mongodb'
+import { Party } from '../models/party'
 import { createMessage } from '../utils/message'
 
 export async function createParty(req: Request, res: Response) {
@@ -20,21 +17,19 @@ export async function createParty(req: Request, res: Response) {
         .send(createMessage('A coleção party não foi encontrada.'))
     }
 
-    const computeParty = {
+    const result = await party?.insertOne({
+      _id: new ObjectId(),
       name: req.body.name,
       acronym: req.body.acronym,
-    }
-
-    const result = await party?.insertOne(computeParty)
+      candidates: [],
+    })
     res.send(result)
   } catch (error) {
     res
       .status(500)
       .send(createMessage('Erro ao criar partido no banco de dados.'))
   } finally {
-    if (client) {
-      await closeDatabaseConnection(client)
-    }
+    await client.close()
   }
 }
 
@@ -51,28 +46,47 @@ export async function getCandidatesWithParty(req: Request, res: Response) {
         .send(createMessage('As coleções não foram encontradas.'))
     }
 
-    const candidates = await candidateCollection.find({}).toArray()
     const parties = await partyCollection.find({}).toArray()
 
-    const partiesWithCandidates = parties.map((party) => {
-      const partyCandidates = candidates.filter(
-        (candidate) => candidate.partyId.toString() === party._id.toString()
+    const presidentPartyMap: { [key: string]: Party } = {}
+    const mayorPartyMap: { [key: string]: Party } = {}
+
+    for (const party of parties) {
+      presidentPartyMap[party._id.toString()] = Object.assign(
+        { candidates: [] },
+        party
       )
+      mayorPartyMap[party._id.toString()] = Object.assign(
+        { candidates: [] },
+        party
+      )
+    }
 
-      return {
-        ...party,
-        candidates: partyCandidates,
-      }
+    const presidentCandidates = await candidateCollection
+      .find({ role: 'president' })
+      .toArray()
+
+    for (const candidate of presidentCandidates) {
+      presidentPartyMap[candidate.partyId.toString()].candidates.push(candidate)
+    }
+
+    const mayorCandidates = await candidateCollection
+      .find({ role: 'mayor' })
+      .toArray()
+
+    for (const mayor of mayorCandidates) {
+      mayorPartyMap[mayor.partyId.toString()].candidates.push(mayor)
+    }
+
+    res.send({
+      president: Object.values(presidentPartyMap),
+      mayor: Object.values(mayorPartyMap),
     })
-
-    res.send(partiesWithCandidates)
   } catch (error) {
     res
       .status(500)
       .send(createMessage('Erro ao buscar candidatos no banco de dados.'))
   } finally {
-    if (client) {
-      await closeDatabaseConnection(client)
-    }
+    await client.close()
   }
 }

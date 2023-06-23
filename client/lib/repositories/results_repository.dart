@@ -14,10 +14,8 @@ class ApiResultsRepository extends ResultsRepository {
 
   @override
   Future<GetResultsResponse> getResults() async {
-    // TODO: implement
-
     final req = api.get(
-      path: '/...',
+      path: '/api/results',
     );
 
     return GetResultsResponse.fromJson(await req);

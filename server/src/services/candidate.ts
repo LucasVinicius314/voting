@@ -1,11 +1,7 @@
 import { Request, Response } from 'express'
+import { collections, connectToDatabase } from './server'
 
-import {
-  connectToDatabase,
-  collections,
-  closeDatabaseConnection,
-} from './server'
-
+import { ObjectId } from 'mongodb'
 import { createMessage } from '../utils/message'
 
 export async function createCandidate(req: Request, res: Response) {
@@ -20,23 +16,19 @@ export async function createCandidate(req: Request, res: Response) {
         .send(createMessage('A coleção candidate não foi encontrada.'))
     }
 
-    const computeCandidate = {
-      partyId: req.body.partyId,
+    const result = await candidate?.insertOne({
+      _id: new ObjectId(),
+      partyId: new ObjectId(req.body.partyId),
       name: req.body.name,
       code: req.body.code,
       role: req.body.role,
-    }
-
-    const result = await candidate?.insertOne(computeCandidate)
+    })
     res.send(result)
   } catch (error) {
     res
       .status(500)
       .send(createMessage('Erro ao criar candidato no banco de dados.'))
   } finally {
-    if (client) {
-      await closeDatabaseConnection(client)
-    }
+    client.close()
   }
 }
-

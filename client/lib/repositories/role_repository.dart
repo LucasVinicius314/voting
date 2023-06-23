@@ -14,10 +14,8 @@ class ApiRoleRepository extends RoleRepository {
 
   @override
   Future<ListRolesResponse> listRoles() async {
-    // TODO: implement
-
     final req = api.get(
-      path: '/...',
+      path: '/api/candidates',
     );
 
     return ListRolesResponse.fromJson(await req);
@@ -32,28 +30,42 @@ class MockRoleRepository extends RoleRepository {
     return ListRolesResponse(
       president: [
         Party(
+          id: '',
           acronym: 'PA',
           name: 'Partido A',
           candidates: [
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 043,
               name: 'Pedro Algo',
             ),
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 072,
               name: 'Marcelo Alguma Coisa',
             ),
           ],
         ),
         Party(
+          id: '',
           acronym: 'PB',
           name: 'Partido B',
           candidates: [
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 563,
               name: 'Caio',
             ),
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 102,
               name: 'Caique Legal',
             ),
@@ -62,28 +74,42 @@ class MockRoleRepository extends RoleRepository {
       ],
       mayor: [
         Party(
+          id: '',
           acronym: 'PG',
           name: 'Partido G',
           candidates: [
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 057,
               name: 'Pedrinho Álvares',
             ),
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 742,
               name: 'Lucas Casca',
             ),
           ],
         ),
         Party(
+          id: '',
           acronym: 'PO',
           name: 'Partido O',
           candidates: [
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 956,
               name: 'Kleber',
             ),
             Candidate(
+              id: '',
+              partyId: '',
+              role: '',
               code: 102,
               name: 'Fred Brabo',
             ),

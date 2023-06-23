@@ -4,12 +4,14 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' show Response;
 import 'package:http_interceptor/http/http.dart';
+import 'package:http_interceptor/models/request_data.dart';
+import 'package:http_interceptor/models/response_data.dart';
 import 'package:voting/exceptions/http_bad_request_exception.dart';
 import 'package:voting/exceptions/http_entity_not_found_exception.dart';
 import 'package:voting/exceptions/http_missing_authorization_exception.dart';
 
 class Api {
-  final client = InterceptedClient.build(interceptors: []);
+  final client = InterceptedClient.build(interceptors: [DefaultInterceptor()]);
 
   final String authority;
 
@@ -163,5 +165,19 @@ class Api {
     } else if (response.statusCode >= 400 && response.statusCode < 600) {
       throw HttpBadRequestException(message: message);
     }
+  }
+}
+
+class DefaultInterceptor extends InterceptorContract {
+  @override
+  Future<RequestData> interceptRequest({required RequestData data}) async {
+    data.headers['Content-Type'] = 'application/json';
+
+    return data;
+  }
+
+  @override
+  Future<ResponseData> interceptResponse({required ResponseData data}) async {
+    return data;
   }
 }

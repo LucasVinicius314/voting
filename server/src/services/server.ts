@@ -1,11 +1,15 @@
-import * as mongoDB from 'mongodb'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
+import * as mongoDB from 'mongodb'
+
+import { Candidate } from '../models/candidate'
+import { Party } from '../models/party'
+import { Vote } from '../models/vote'
 
 export const collections: {
-  vote?: mongoDB.Collection
-  candidate?: mongoDB.Collection
-  party?: mongoDB.Collection
+  vote?: mongoDB.Collection<Vote>
+  candidate?: mongoDB.Collection<Candidate>
+  party?: mongoDB.Collection<Party>
 } = {}
 
 function checkEnvFile() {
@@ -19,58 +23,40 @@ function checkEnvFile() {
   }
 }
 
-export async function connectToDatabase() {
+export async function mongoSetup() {
   dotenv.config()
   const envFileExists = checkEnvFile()
 
   if (!envFileExists) {
-    console.log('.env file does not exist. Error to connect to database')
-    return null
+    console.log('.env file does not exist. Error connecting to to database.')
+    return
   }
 
-  const client: mongoDB.MongoClient = new mongoDB.MongoClient(
-    process.env.MONGO_URI
-  )
+  const client = new mongoDB.MongoClient(process.env.MONGO_URI)
 
   try {
     await client.connect()
 
-    const db: mongoDB.Db = client.db(process.env.DB_NAME)
-    
-    const voteCollection: mongoDB.Collection = db.collection(
-      process.env.COLLECTION_NAME_VOTE
-    )
-    collections.vote = voteCollection
-   
-    const candidateCollection: mongoDB.Collection = db.collection(
+    const db = client.db(process.env.DB_NAME)
+
+    collections.vote = db.collection<Vote>(process.env.COLLECTION_NAME_VOTE)
+
+    collections.candidate = db.collection<Candidate>(
       process.env.COLLECTION_NAME_CANDIDATE
     )
-    collections.candidate = candidateCollection
 
-    const partyCollection: mongoDB.Collection = db.collection(
-      process.env.COLLECTION_NAME_PARTY
-    )
-    collections.party = partyCollection
+    collections.party = db.collection<Party>(process.env.COLLECTION_NAME_PARTY)
 
     console.log(
-      `Successfully connected to database: ${db.databaseName} and collections: ${voteCollection.collectionName} - ${candidateCollection.collectionName} - ${partyCollection.collectionName}`
+      `Successfully connected to database: ${db.databaseName} and collections: ${collections.vote.collectionName} - ${collections.candidate.collectionName} - ${collections.party.collectionName}`
     )
-
-    return client
   } catch (error) {
-    console.log(`Error to connect database.`)
-    client.close()
-    return null
+    console.error(`Error to connecting to database.`, error)
+
+    throw error
   }
 }
 
-export async function closeDatabaseConnection(client: mongoDB.MongoClient) {
-  try {
-    if (client) {
-      await client.close()
-      console.log('Database connection closed.')
-    }
-  } catch (error) {
-    console.log('Error closing database connection.')
-  }
+export async function connectToDatabase(): Promise<mongoDB.MongoClient> {
+  return new mongoDB.MongoClient(process.env.MONGO_URI).connect()
 }
