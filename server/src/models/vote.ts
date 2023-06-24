@@ -8,5 +8,6 @@ export type Vote = {
   gender: string,
   latitude: Double,
   longitude: Double,
+  createdAt: Timestamp,
   birthDate: Timestamp,
 }

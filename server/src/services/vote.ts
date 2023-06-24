@@ -27,7 +27,8 @@ export async function createVote(req: Request, res: Response) {
     }
 
     const birthDate = Timestamp.fromInt(new Date(req.body.birthDate).getTime())
-
+    const createdAt = Timestamp.fromInt(Date.now())
+    
     const result = await vote?.insertOne({
       _id: new ObjectId(),
       presidentId: new ObjectId(req.body.presidentId),
@@ -36,6 +37,7 @@ export async function createVote(req: Request, res: Response) {
       gender: req.body.gender,
       latitude: req.body.latitude,
       longitude: req.body.longitude,
+      createdAt: createdAt,
       birthDate: birthDate,
     })
     res.send(result)
